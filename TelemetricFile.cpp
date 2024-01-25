@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------//
-//                    *** ЛАБОРАТОРНАЯ РАБОТА №№ 3,4,5 ***                    //
+//                    *** ЛАБОРАТОРНАЯ РАБОТА № 5 ***                         //
 //                                                                            //
 // Файл TelemetricFile.cpp                                                    //
 //                                                                            //
 // Автор ГЛУЩЕНКО Сергей Юрьевич                                              //
 //                                                                            //
-//                                                   Москва, НИИ ТП, 2023 год //
+//                                                   Москва, НИИ ТП, 2024 год //
 //----------------------------------------------------------------------------//
 
 
@@ -17,8 +17,7 @@ TPoint::TPoint(QString line)
 QStringList SL;
   SL = line.split('\t');
 
-  mTime = QDateTime::currentDateTime();
-  mTime.setTime(QTime::fromString(SL[0], "hh:mm:ss.zzz"));
+  mTime = QDateTime::fromString(SL[0], "yyyy.MM.dd  hh:mm:ss.zzz");
   mTime.setTimeSpec(Qt::UTC);
 
   mValue = SL[3].toDouble();
@@ -63,7 +62,7 @@ void TTelemetricFile::ReadFile(QString PathName)
     {
       str = QString(File.readLine());
 
-      if (str != "")
+      if ((str != "") && (str != "\r\n"))
         Data.push_back(new TPoint(str));
 
     } while (str != "");
@@ -76,6 +75,7 @@ TData TTelemetricFile::ReadFile2(QString PathName)
 {
 QString str;
 TData Res;
+int i=0;
 
   OpenFile(PathName);
   if (IsOpen == true)
@@ -83,9 +83,10 @@ TData Res;
     File.readLine();  //Чтение заголовка файла
     do
     {
+      i++;
       str = QString(File.readLine());
 
-      if (str != "")
+      if ((str != "") && (str != "\r\n"))
         Res.push_back(new TPoint(str));
 
     } while (str != "");
@@ -100,7 +101,7 @@ QStringList TTelemetricFile::Print()
 {
 QStringList Res;
 
-  for(int i=0; i<Data.size(); i++)
+  for(unsigned int i=0; i<Data.size(); i++)
     Res.push_back(Data[i]->toString());
 
   return Res;
@@ -122,7 +123,7 @@ void TTelemetricFile::OpenFile(QString FilePathName)
 
 void TTelemetricFile::DataClear()
 {
-  for(int i=0; i<Data.size(); i++)
+  for(unsigned int i=0; i<Data.size(); i++)
     delete Data[i];
 
   Data.clear();

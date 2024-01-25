@@ -38,9 +38,9 @@ QString FilePathName;  //Путь и имя к текстовому файлу
                                               qApp->applicationDirPath(), QString::fromUtf8("*.txt"));
   if (FilePathName != "")
   {
-    #ifdef __unix__
+    /*#ifdef __unix__
     FilePathName = FilePathName + ".txt";
-    #endif
+    #endif*/
 
     DataClear();
 
@@ -51,7 +51,7 @@ QString FilePathName;  //Путь и имя к текстовому файлу
 
 void TGraphic::DataClear()
 {
-  for(int i=0; i<Data.size(); i++)
+  for(unsigned int i=0; i<Data.size(); i++)
     delete Data[i];
 
   Data.clear();
@@ -105,7 +105,7 @@ void TGraphic::paintEvent(QPaintEvent *event)
   {
     QFrame::paintEvent(event);
     QPainter Painter(this);
-    double ScrX=0.0, ScrY=0.0, PredX=0.0, PredY=0.0, PredX2=0.0, PredY2=0.0;
+    double ScrX=0.0, ScrY=0.0, PredX=0.0, /*PredY=0.0,*/ PredX2=0.0, PredY2=0.0;
     QPointF PF;
     QFont Font;
 
@@ -125,13 +125,13 @@ void TGraphic::paintEvent(QPaintEvent *event)
     MinY = 1000000000.0;
     MaxY = -1000000000.0;
 
-    for(int i=0; i<Data.size(); i++)
+    for(unsigned int i=0; i<Data.size(); i++)
     {
       MinY = std::min(MinY, (-1)*Data[i]->mValue);
       MaxY = std::max(MaxY, (-1)*Data[i]->mValue);
     }
 
-    for(int i=0; i<Data.size(); i++)
+    for(unsigned int i=0; i<Data.size(); i++)
     {
       PredX2 = ScrX;
       PredY2 = ScrY;
@@ -155,7 +155,7 @@ void TGraphic::paintEvent(QPaintEvent *event)
       if (i == 0)
       {
         PredX = ScrX;
-        PredY = ScrY;
+        //PredY = ScrY;
 
         //Painter.drawText(0+Font.pointSize()/2, static_cast<int>(ScrY+Font.pointSize()/2), QString::number(Data[i]->mValue));
 
@@ -173,7 +173,7 @@ void TGraphic::paintEvent(QPaintEvent *event)
         if ((ScrX-PredX) > 10*Font.pointSize())
         {
           PredX = ScrX;
-          PredY = ScrY;
+          //PredY = ScrY;
 
           Painter.drawText(static_cast<int>(ScrX)-4*Font.pointSize(), static_cast<int>(height()-Font.pointSize()),
                            QDateTimeToQString(Data[i]->mTime, "HH:mm:ss.zzz"));
